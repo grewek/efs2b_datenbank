@@ -1,8 +1,10 @@
+# Format der Daten noch nicht ganz klar, dies ist ein erster Entwurf.
 tabular_data = {
     "row_0": [ ("id", 0), ("marke", "Volkswagen"), ("modell", "Golf"), ("farbe", "Rot"), ("motorleistung", 120), ("antriebsart", "benziner"), ("baujahr", "2012"), ("mietpreis", 30) ]
 }
 
-def print_column(column_data, column_length):
+#Formatiert den Inhalt der Spalten, so dass alle die gleiche Länge haben.
+def format_column(column_data, column_length):
     if len(column_data) < column_length:
         rest = (column_length - len(column_data))
         return f"{column_data + ("*" * rest)}"
@@ -10,8 +12,9 @@ def print_column(column_data, column_length):
         return column_data
 
 
-print_column("Marke", len("Volkswagen"))
-print_column("Volkswagen", len("Volkswagen"))
+#Testcode
+print(format_column("Marke", len("Volkswagen")))
+print(format_column("Volkswagen", len("Volkswagen")))
 
 #Marke      Modell Farbe Motorleistung Antriebsart Baujahr Mietpreis
 #Volkswagen Golf   Rot   120           Benziner    2012    30
