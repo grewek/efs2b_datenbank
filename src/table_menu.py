@@ -31,10 +31,11 @@ def get_column_from_key(column_data, key):
     return column_data[key]
 
 #TODO: Wir sollten die generierung des Randes in eine eigene Funktion auslagern.
-def print_columns(columns, column_names, index):
+def print_column(columns, column_names, index, closing_border = False):
     #TODO: We need to refactor this mess!
     result_border = ""
     result = ""
+
     for i, column_name in enumerate(column_names):
         column = get_column_from_key(columns, column_name)
         longest_entry = find_longest_column(column, column_name)
@@ -55,9 +56,33 @@ def print_columns(columns, column_names, index):
     print(result_border)
     print(result)
 
-print_columns(tabular_data,["marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"],0)
-print_columns(tabular_data,["marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"],1)
-print_columns(tabular_data,["marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"],2)
+    if(closing_border):
+        print(result_border)
+
+def print_table(tablular_data, headers):
+    for row_index, header in enumerate(headers):
+        if(row_index + 1 == len(headers)):
+                print_column(tabular_data, headers, row_index, True)
+        else:
+                print_column(tabular_data, headers, row_index)
+
+# Die nächste Zeile dient zum testen des Moduls! Ihr könnt diese Datei einfach mit python3 src/table_menu.py ausführen
+# das Ergebnis betrachten.
+print_table(tabular_data, ["marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"])
+
+#Als nächstes folgt eine grobe Erklärung was die Aufgabe dieses Moduls ist und was der Code bewerkstelligt.
+# 
+# Aufgabe: Tabelle mit Rahmen auf Bildschirm ausgeben.
+# Erklärung:
+#  Wir wollen eine Tabelle wie unten aufgeführt ausgeben, dazu ist es notwendig das wir das
+#  längste Element in der Spalte kennen. Bei der Spalte 'Marke' wäre dies 'Volkswagen'. Mit
+#  diesem Wert können wir die __differenz__ berechnen die wir mit Leerzeichen auffüllen müssen
+#  die genaue Formel ist in Funktion format_column auf Zeile 24 zu finden! Dass ganze müssen
+#  wir nur machen, wenn die differenz > 0 ist ansonsten geben wir den String unverändert zurück. 
+#
+#  1. Längste Spalte finden (Funktion find_longest_column)
+#  2. Nötige Leerzeichen berechnen und string formatieren (format_column)
+# 
 #Marke      Modell Farbe   Motorleistung Antriebsart Baujahr Mietpreis
 #Volkswagen Golf   Rot     120           Benziner    2012    30
 #Audi       A3     Silber  220           Diesel      2018    28
