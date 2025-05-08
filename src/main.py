@@ -25,6 +25,7 @@ def main(stdscr):
     top_window = int(float(screen_height) * 0.6)    
     bottom_window = int(float(screen_height) * 0.4)
     stdscr.nodelay(True)
+    curses.curs_set(0)
 
     table_view_window = curses.newwin(top_window, screen_width, 0, 0)
     menu_view_window = curses.newwin(bottom_window, screen_width, top_window, 0)
