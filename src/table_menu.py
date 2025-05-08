@@ -61,20 +61,19 @@ def create_row(columns, column_names, index, closing_border = False):
 
     return result
 
-def print_table(tablular_data, headers):
+def create_table(tablular_data, headers):
     result = ""
     for row_index, header in enumerate(headers):
         if(row_index + 1 == len(headers)):
                 result += create_row(tabular_data, headers, row_index, True)
-                #print_column(tabular_data, headers, row_index, True)
         else:
                 result += create_row(tabular_data, headers, row_index)
-                #print_column(tabular_data, headers, row_index)
-    print(result)
+
+    return result
 
 # Die nächste Zeile dient zum testen des Moduls! Ihr könnt diese Datei einfach mit python3 src/table_menu.py ausführen
-# das Ergebnis betrachten.
-print_table(tabular_data, ["marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"])
+# und das Ergebnis betrachten.
+print(create_table(tabular_data, ["marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]))
 
 #Als nächstes folgt eine grobe Erklärung was die Aufgabe dieses Moduls ist und was der Code bewerkstelligt.
 # 
