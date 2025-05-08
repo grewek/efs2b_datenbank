@@ -31,10 +31,11 @@ def get_column_from_key(column_data, key):
     return column_data[key]
 
 #TODO: Wir sollten die generierung des Randes in eine eigene Funktion auslagern.
-def print_column(columns, column_names, index, closing_border = False):
+def create_row(columns, column_names, index, closing_border = False):
     #TODO: We need to refactor this mess!
-    result_border = ""
     result = ""
+    table_border = ""
+    column_content = ""
 
     for i, column_name in enumerate(column_names):
         column = get_column_from_key(columns, column_name)
@@ -44,27 +45,32 @@ def print_column(columns, column_names, index, closing_border = False):
             border = "+" + ("-" * (longest_entry)) + "+"
         else:
             border = ("-" * (longest_entry)) + "+"
-        result_border += border;
+        table_border += border;
 
         formatted_column = format_column(column[index], longest_entry)
 
         if i == 0:
-            result += f"|{formatted_column}|"
+            column_content += f"|{formatted_column}|"
         else:
-            result += f"{formatted_column}|"
+            column_content += f"{formatted_column}|"
 
-    print(result_border)
-    print(result)
+    result += f"{table_border}\n{column_content}\n"
 
     if(closing_border):
-        print(result_border)
+        result += f"{table_border}"
+
+    return result
 
 def print_table(tablular_data, headers):
+    result = ""
     for row_index, header in enumerate(headers):
         if(row_index + 1 == len(headers)):
-                print_column(tabular_data, headers, row_index, True)
+                result += create_row(tabular_data, headers, row_index, True)
+                #print_column(tabular_data, headers, row_index, True)
         else:
-                print_column(tabular_data, headers, row_index)
+                result += create_row(tabular_data, headers, row_index)
+                #print_column(tabular_data, headers, row_index)
+    print(result)
 
 # Die nächste Zeile dient zum testen des Moduls! Ihr könnt diese Datei einfach mit python3 src/table_menu.py ausführen
 # das Ergebnis betrachten.
