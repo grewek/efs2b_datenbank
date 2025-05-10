@@ -1,3 +1,5 @@
+import utilities
+
 # Format der Daten noch nicht ganz klar, dies ist ein erster Entwurf.
 tabular_data = {
     "marke": [ "Marke", "Audi", "Volkswagen", "BMW", "Opel", "Renault", "Hyundai", "Toyota", ],
@@ -8,15 +10,6 @@ tabular_data = {
     "baujahr": ["Baujahr", 1999, 2000, 2001, 2002, 2003, 2004, 2005],
     "mietpreis": ["Mietpreis", 30, 25, 45, 90, 50, 60, 81]
 }
-
-#Findet die längste Zeile einer Spalte.
-def find_longest_column(columns, default_header):
-    result = len(default_header)
-    for column in columns:
-        if len(str(column)) > result:
-            result = len(str(column))
-
-    return result
 
 #Formatiert den Inhalt der Spalten, so dass alle die gleiche Länge haben.
 def format_column(column_data, column_length):
@@ -39,7 +32,7 @@ def create_row(columns, column_names, index, closing_border = False):
 
     for i, column_name in enumerate(column_names):
         column = get_column_from_key(columns, column_name)
-        longest_entry = find_longest_column(column, column_name)
+        longest_entry = utilities.find_longest_element_in_column(column, column_name)
 
         if i == 0:
             border = "+" + ("-" * (longest_entry)) + "+"
