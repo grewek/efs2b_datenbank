@@ -4,9 +4,10 @@ import table_menu
 import utilities
 
 MAIN_MENU_ENTRIES = [
-    "a) Eintrag hinzufügen",
-    "b) Eintrag ändern",
-    "c) Eintrag löschen",
+    "a) Eintrag hinzufügen [Hotkey => i]",
+    "b) Eintrag ändern     [Hotkey => c]",
+    "c) Eintrag löschen    [Hotkey => d]",
+    "d) Programm beenden   [Hotkey => q]"
 ]
 
 def update(stdscr, table_view_window, menu_view_window):
@@ -26,6 +27,7 @@ def update_table_view_window(table_view_window):
     table_lines = table.splitlines()
 
     #TODO: Line needs to be refactored to be more readable...
+    #TODO: Use the new utility function!
     x_align_center= int(float(curses.COLS) / 2.0) - int((float(len(table_lines[0])) / 2.0))
 
     for i, line in enumerate(table_lines):
