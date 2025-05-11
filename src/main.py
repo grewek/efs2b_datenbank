@@ -41,7 +41,12 @@ def main(stdscr):
         menu_window.render(stdscr)
 
         user_input = stdscr.getch()
-        if user_input == ord('q'):
+
+        if user_input == ord('j'):
+            table_window.increment_position()
+        elif user_input == ord('k'):
+            table_window.decrement_position()
+        elif user_input == ord('q'):
             break
 
 if __name__ == "__main__":
