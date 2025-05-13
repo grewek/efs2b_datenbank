@@ -1,5 +1,6 @@
 import curses
 from curses import wrapper
+import main_menu
 import table_menu
 import tui_window
 
@@ -10,7 +11,13 @@ MAIN_MENU_ENTRIES = [
     "d) Programm beenden   [Hotkey => q]"
 ]
 
-def main(stdscr):
+def main_basic():
+    should_quit = False
+    while not should_quit:
+        should_quit = main_menu.main_menu()
+
+def main_curses(stdscr):
+    #Funktioniert leider nicht unter Windows...
     screen_width = curses.COLS
     screen_height = curses.LINES
     top_window = int(float(screen_height) * 0.6)    
@@ -50,4 +57,5 @@ def main(stdscr):
             break
 
 if __name__ == "__main__":
-    wrapper(main)
+    main_basic()
+    #wrapper(main)
