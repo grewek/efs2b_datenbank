@@ -2,6 +2,7 @@ import utilities
 
 # Format der Daten noch nicht ganz klar, dies ist ein erster Entwurf.
 tabular_data = {
+    "id": ["Id", 0, 1, 2, 3, 4, 5, 6],
     "marke": [ "Marke", "Audi", "Volkswagen", "BMW", "Opel", "Renault", "Hyundai", "Toyota", ],
     "modell": [ "Modell", "A3", "Golf", "i3", "Astra", "Clio", "XYZ", "BM-Q" ],
     "farbe": [ "Farbe", "Rot", "Silber", "Grau", "Metallik-Blau", "Schwarz", "Weiß", "Grün"],
@@ -66,7 +67,7 @@ def create_table(tablular_data, headers):
 
 # Die nächste Zeile dient zum testen des Moduls! Ihr könnt diese Datei einfach mit python3 src/table_menu.py ausführen
 # und das Ergebnis betrachten.
-print(create_table(tabular_data, ["marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]))
+print(create_table(tabular_data, ["id", "marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]))
 
 #Als nächstes folgt eine grobe Erklärung was die Aufgabe dieses Moduls ist und was der Code bewerkstelligt.
 # 
