@@ -1,3 +1,4 @@
+import mysql.connector
 import table_menu
 
 HEADERS = ["id", "marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]
@@ -10,22 +11,25 @@ def add_row_menu():
 def change_row_menu():
     table_view = table_menu.create_table(table_menu.tabular_data, HEADERS)
     print(table_view)
-    id = input("Bitte gib die ID der zu ändernden Zeile ein: ")
+    id = input("Bitte geben sie die ID der zu ändernden Zeile ein: ")
 
 def delete_row_menu():
     table_view = table_menu.create_table(table_menu.tabular_data, HEADERS)
     print(table_view)
-    id = input("Bitte gib die ID der zu löschenden Zeile ein: ")
+    id = input("Bitte geben sie die ID der zu löschenden Zeile ein: ")
 
 def search_rows_menu():
     input(f"Nach was soll gesucht werden? Mögliche werte {HEADERS}: ")
     search_order = input(f"Soll Aufsteigend oder Absteigend gesucht werden?: ")
 
 def calculate_rent_menu():
+    id = input("ID des gewünschten Fahrzeugs eingeben: ")
+    rent_length = input("Mietzeitraum in Tagen angeben: ")
     pass
 
 def filter_rows_menu():
     pass
+
 def main_menu():
     print("Wilkommen zur Datenbankverwaltung")
     print("================================")
@@ -50,7 +54,7 @@ def main_menu():
         search_rows_menu()
     if selection == "e":
         filter_rows_menu()
-    if selection == "f"
+    if selection == "f":
         calculate_rent_menu()
     else:
         print("Unbekannte Option bitte versuche es erneut.")
