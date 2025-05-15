@@ -16,5 +16,14 @@ def establish_connection():
 def disconnect(context):
     context.close()
 
+def query_row(context, query_string, data):
+    pass
+
+def update_row(context, update_string, data):
+    pass
+
+def delete_row(context, delete_string, data):
+    pass
 
 context = establish_connection()
+disconnect()
