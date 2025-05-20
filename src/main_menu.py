@@ -1,12 +1,25 @@
 import mysql.connector
 import table_menu
+import conversions
 
 HEADERS = ["id", "marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]
+
+def get_row_data_menu():
+    mark = input("Bitte geben sie die Marke des Wagens ein: ")
+    model = input("Bitte geben sie den Namen des Modells ein: ")
+    color = input("Bitte geben sie die Farbe des Modells ein: ")
+    power = conversions.get_int("Bitte geben sie die Leistung in PS ein: ")
+    drive_type = input("Bitte geben sie die Antriebsart ein (Elektro/Diesel/Benzin): ")
+    manufacture_date = conversions.get_int("Bitte geben sie das Herstellungsjahr ein: ")
+    costs_per_day = conversions.get_float("Bitte geben sie die täglichen Kosten ein:")
+
+    return (mark, model, color, power, drive_type, manufacture_date, costs_per_day)
 
 def add_row_menu():
     table_view = table_menu.create_table(table_menu.tabular_data, HEADERS)
     print(table_view)
     id = input("Hier werden die Daten vom Nutzer der Reihe nach abgefragt.")
+    row_data = get_row_data_menu()
 
 def change_row_menu():
     table_view = table_menu.create_table(table_menu.tabular_data, HEADERS)
