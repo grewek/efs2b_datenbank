@@ -17,6 +17,13 @@ def establish_connection():
 def disconnect(context):
     context.close()
 
+def insert_row(context, query_string, data):
+    cursor = context.cursor()
+
+    if data:
+        cursor.execute(query_string, data)
+
+    #TODO: What now?
 def query_row(context, query_string, data):
     cursor = context.cursor()
 
