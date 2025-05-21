@@ -1,6 +1,9 @@
 import mysql.connector
 import table_menu
 import conversions
+import database
+import sql_queries
+import datetime
 
 HEADERS = ["id", "marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]
 
@@ -13,13 +16,14 @@ def get_row_data_menu():
     manufacture_date = conversions.get_int("Bitte geben sie das Herstellungsjahr ein: ")
     costs_per_day = conversions.get_float("Bitte geben sie die täglichen Kosten ein:")
 
-    return (mark, model, color, power, drive_type, manufacture_date, costs_per_day)
+    return (mark, model, color, power, drive_type, datetime.date(manufacture_date, 1, 1), costs_per_day)
 
 def add_row_menu():
     table_view = table_menu.create_table(table_menu.tabular_data, HEADERS)
     print(table_view)
     id = input("Hier werden die Daten vom Nutzer der Reihe nach abgefragt.")
     row_data = get_row_data_menu()
+    return row_data
 
 def change_row_menu():
     table_view = table_menu.create_table(table_menu.tabular_data, HEADERS)
@@ -58,7 +62,9 @@ def main_menu():
     selection = input("Ihre Auswahl: ")
 
     if selection == "a":
-        add_row_menu()
+        data = add_row_menu()
+        context = database.establish_connection()
+        database.insert_row(context, sql_queries.insert_car, data)
     if selection == "b":
         change_row_menu()
     if selection == "c":
