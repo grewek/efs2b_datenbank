@@ -16,5 +16,3 @@ def get_float(prompt):
     except ValueError:
         print("Fehler: Eingabe konnte nicht in float konvertiert werden.")
 
-get_int("Dies ist ein test")
-get_float("Noch ein test")
