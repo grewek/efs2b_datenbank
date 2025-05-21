@@ -22,8 +22,9 @@ def insert_row(context, query_string, data):
 
     if data:
         cursor.execute(query_string, data)
+        mietwagennr = cursor.lastrowid
+        context.commit()
 
-    #TODO: What now?
 def query_row(context, query_string, data):
     cursor = context.cursor()
 
@@ -38,8 +39,3 @@ def update_row(context, update_string, data):
 
 def delete_row(context, delete_string, data):
     pass
-
-context = establish_connection()
-query_row(context, sql_queries.query_all, None)
-
-disconnect(context)
