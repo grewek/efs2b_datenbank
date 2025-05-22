@@ -1,16 +1,5 @@
 import utilities
 
-# Format der Daten noch nicht ganz klar, dies ist ein erster Entwurf.
-tabular_data = {
-    "id": ["Id", 0, 1, 2, 3, 4, 5, 6],
-    "marke": [ "Marke", "Audi", "Volkswagen", "BMW", "Opel", "Renault", "Hyundai", "Toyota", ],
-    "modell": [ "Modell", "A3", "Golf", "i3", "Astra", "Clio", "XYZ", "BM-Q" ],
-    "farbe": [ "Farbe", "Rot", "Silber", "Grau", "Metallik-Blau", "Schwarz", "Weiß", "Grün"],
-    "motorleistung": ["Motorleistung", 120, 220, 330, 440, 80, 90, 55],
-    "antriebsart": ["Antriebsart", "Benziner", "Diesel", "Elektro", "Diesel", "Diesel", "Elektro", "Benziner"],
-    "baujahr": ["Baujahr", 1999, 2000, 2001, 2002, 2003, 2004, 2005],
-    "mietpreis": ["Mietpreis", 30, 25, 45, 90, 50, 60, 81]
-}
 
 #Formatiert den Inhalt der Spalten, so dass alle die gleiche Länge haben.
 def format_column(column_data, column_length):
@@ -55,34 +44,16 @@ def create_row(columns, column_names, index, closing_border = False):
 
     return result
 
-def create_table(tablular_data, headers):
+def create_table(tabular_data, headers):
     result = ""
+    print(len(tabular_data))
+    index = 0
     for row_index, header in enumerate(headers):
         if(row_index + 1 == len(headers)):
-                result += create_row(tabular_data, headers, row_index, True)
+            result += create_row(tabular_data, headers, row_index, True)
         else:
-                result += create_row(tabular_data, headers, row_index)
+            result += create_row(tabular_data, headers, row_index)
 
+    print(result)
     return result
 
-# Die nächste Zeile dient zum testen des Moduls! Ihr könnt diese Datei einfach mit python3 src/table_menu.py ausführen
-# und das Ergebnis betrachten.
-print(create_table(tabular_data, ["id", "marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]))
-
-#Als nächstes folgt eine grobe Erklärung was die Aufgabe dieses Moduls ist und was der Code bewerkstelligt.
-# 
-# Aufgabe: Tabelle mit Rahmen auf Bildschirm ausgeben.
-# Erklärung:
-#  Wir wollen eine Tabelle wie unten aufgeführt ausgeben, dazu ist es notwendig das wir das
-#  längste Element in der Spalte kennen. Bei der Spalte 'Marke' wäre dies 'Volkswagen'. Mit
-#  diesem Wert können wir die __differenz__ berechnen die wir mit Leerzeichen auffüllen müssen
-#  die genaue Formel ist in Funktion format_column auf Zeile 24 zu finden! Dass ganze müssen
-#  wir nur machen, wenn die differenz > 0 ist ansonsten geben wir den String unverändert zurück. 
-#
-#  1. Längste Spalte finden (Funktion find_longest_column)
-#  2. Nötige Leerzeichen berechnen und string formatieren (format_column)
-# 
-#Marke      Modell Farbe   Motorleistung Antriebsart Baujahr Mietpreis
-#Volkswagen Golf   Rot     120           Benziner    2012    30
-#Audi       A3     Silber  220           Diesel      2018    28
-#Toyota     BM-Q   Grau    330           Elektrisch  2024    58
