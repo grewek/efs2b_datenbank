@@ -46,14 +46,15 @@ def create_row(columns, column_names, index, closing_border = False):
 
 def create_table(tabular_data, headers):
     result = ""
-    print(len(tabular_data))
     index = 0
-    for row_index, header in enumerate(headers):
+
+    column_length = len(tabular_data[headers[0]])
+
+    for row_index in range(0, column_length):
         if(row_index + 1 == len(headers)):
             result += create_row(tabular_data, headers, row_index, True)
         else:
             result += create_row(tabular_data, headers, row_index)
 
-    print(result)
     return result
 
