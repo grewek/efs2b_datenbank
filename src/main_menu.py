@@ -69,12 +69,21 @@ def search_rows_menu():
     input(f"Nach was soll gesucht werden? Mögliche werte {HEADERS}: ")
     search_order = input(f"Soll Aufsteigend oder Absteigend gesucht werden?: ")
 
+def filter_rows_menu():
+    to_search = input(f"Was soll gefiltert werden (Marke/Antrieb): ")
+
+    if to_search == "marke":
+        return sql_queries.query_search_mark
+    elif to_search == "antrieb":
+        target_drive_type = input("Bitte geben sie den gewünschten Antriebstypen an (Elektro/Diesel/Benziner):")
+
+        return (sql_queries.query_search_drivetype, (target_drive_type,))
+    else:
+        print(f"Nach dem wert {to_search} kann nicht gefiltert werden.\nKehre ins Hauptmenü zurück.")
+
 def calculate_rent_menu():
     id = input("ID des gewünschten Fahrzeugs eingeben: ")
     rent_length = input("Mietzeitraum in Tagen angeben: ")
-    pass
-
-def filter_rows_menu():
     pass
 
 def main_menu():
@@ -86,9 +95,8 @@ def main_menu():
     print("b.) Zeile ändern")
     print("c.) Zeile Entfernen")
     print("d.) Datensatz anzeigen")
-    print("e.) Datensatz durchsuchen")
-    print("f.) Datensatz Filtern")
-    print("g.) Mietpreis berechnen")
+    print("e.) Datensatz filtern")
+    print("f.) Mietpreis berechnen")
     print("q.) Programm Beenden")
     selection = input("Ihre Auswahl: ")
 
@@ -106,11 +114,19 @@ def main_menu():
         context = database.establish_connection()
         raw_data = database.query_all_data(context, sql_queries.query_all)
         table_data = conversions.row_to_column_data(raw_data)
-        print(table_data)
         table_view = table_menu.create_table(table_data, HEADERS)
         print(table_view)
     if selection == "e":
-        filter_rows_menu()
+        user_data = filter_rows_menu()
+        filter_query = user_data[0] 
+        filter_data = user_data[1]
+
+        context = database.establish_connection()
+        raw_data = database.filter_row(context, filter_query, filter_data)
+        table_data = conversions.row_to_column_data(raw_data)
+
+        table_view = table_menu.create_table(table_data, HEADERS)
+        print(table_view)        
     if selection == "f":
         calculate_rent_menu()
     else:

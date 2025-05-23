@@ -40,6 +40,11 @@ def query_row(context, query_string, data):
         cursor.execute(query_string)
     pass
 
+def filter_row(context, query_string, data):
+    cursor = context.cursor()
+    cursor.execute(query_string, data)
+    return cursor
+    
 def update_row(context, update_string, data):
     cursor = context.cursor()
 
