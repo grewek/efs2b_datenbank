@@ -16,6 +16,8 @@ def main_basic():
     while not should_quit:
         should_quit = main_menu.main_menu()
 
+    print("ALL YOUR DATA ARE BELONG TO US")
+
 def main_curses(stdscr):
     #Funktioniert leider nicht unter Windows...
     screen_width = curses.COLS

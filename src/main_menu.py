@@ -129,6 +129,8 @@ def main_menu():
         print(table_view)        
     if selection == "f":
         calculate_rent_menu()
+    if selection == "q":
+        return True
     else:
         print("Unbekannte Option bitte versuche es erneut.")
 
