@@ -3,19 +3,18 @@ def get_int(prompt):
 
     try:
         value = int(raw_input)
-        return value
+        return (value, True)
     except ValueError:
-        print("Fehler: Eingabe konnte nicht in int konvertiert werden.")
+        return (None, False)
 
 def get_float(prompt):
     raw_input = input(f"{prompt}: ")
 
     try:
         value = float(raw_input)
-        return value
+        return (value, True)
     except ValueError:
-        print("Fehler: Eingabe konnte nicht in float konvertiert werden.")
-
+        return (None, False)
 
 tabular_data = {
     "id": ["Id", 0, 1, 2, 3, 4, 5, 6],

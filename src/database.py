@@ -51,7 +51,10 @@ def update_row(context, update_string, data):
     if data:
         cursor.execute(update_string, data)
         context.commit()
-    pass
 
 def delete_row(context, delete_string, data):
-    pass
+    cursor = context.cursor()
+
+    if data:
+        cursor.execute(delete_string, data)
+        context.commit()
