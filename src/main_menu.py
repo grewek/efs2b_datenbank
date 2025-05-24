@@ -48,8 +48,6 @@ def get_updated_data_menu():
         print("Unbekannte Option, kehre ins Hauptmenü zurück")
 
 def add_row_menu():
-    table_view = table_menu.create_table(table_menu.tabular_data, HEADERS)
-    print(table_view)
     id = input("Hier werden die Daten vom Nutzer der Reihe nach abgefragt.")
     row_data = get_row_data_menu()
     return row_data
@@ -70,14 +68,20 @@ def search_rows_menu():
     search_order = input(f"Soll Aufsteigend oder Absteigend gesucht werden?: ")
 
 def filter_rows_menu():
-    to_search = input(f"Was soll gefiltert werden (Marke/Antrieb): ")
+    to_search = input(f"Was soll gefiltert werden (Marke/Antrieb/Preis): ").lower()
 
     if to_search == "marke":
-        return sql_queries.query_search_mark
+        return (sql_queries.query_search_mark, ())
     elif to_search == "antrieb":
         target_drive_type = input("Bitte geben sie den gewünschten Antriebstypen an (Elektro/Diesel/Benziner):")
-
         return (sql_queries.query_search_drivetype, (target_drive_type,))
+    elif to_search == "preis":
+        search_order = input("Bitte gib an ob der Preis aufsteigend oder absteigend sortiert werden soll (Aufsteigend/Absteigend): ").lower()
+        #TODO: Error Handling
+        if search_order == "aufsteigend":
+            return (sql_queries.query_search_price_asc, ())
+        elif search_order == "absteigend":
+            return (sql_queries.query_search_price_desc, ())
     else:
         print(f"Nach dem wert {to_search} kann nicht gefiltert werden.\nKehre ins Hauptmenü zurück.")
 
@@ -94,8 +98,8 @@ def main_menu():
     print("a.) Zeile Hinzufügen")
     print("b.) Zeile ändern")
     print("c.) Zeile Entfernen")
-    print("d.) Datensatz anzeigen")
-    print("e.) Datensatz filtern")
+    print("d.) Mietwagen anzeigen")
+    print("e.) Mietwagen filtern")
     print("f.) Mietpreis berechnen")
     print("q.) Programm Beenden")
     selection = input("Ihre Auswahl: ")
