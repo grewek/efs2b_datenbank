@@ -7,6 +7,10 @@ import datetime
 
 HEADERS = ["id", "marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]
 
+POSSIBLE_DRIVE_TYPES = ["Elektro", "Diesel", "Benzin"]
+POSSIBLE_COLUMNS = ["Marke", "Model", "Farbe", "Leistung", "Antriebsart", "Herstellungsjahr", "Mietpreis"]  
+POSSIBLE_SORT_ORDER = ["Aufsteigend", "Absteigend"] 
+POSSIBLE_FILTERS = ["Marke", "Antrieb", "Preis"]
 
 def repeated_input_int_value(prompt):
     while True:
@@ -24,7 +28,7 @@ def repeated_input_float_value(prompt):
         if state:
             return value
         else:
-            print(f"Der Wert is ungültig bitte nur Werte eingeben")
+            print(f"Der Wert ist ungültig bitte nur Werte eingeben")
 
 
 def check_validity(user_input, valid_strings):
@@ -48,7 +52,7 @@ def get_row_data_menu():
     color = input("Bitte geben sie die Farbe des Modells ein: ")
     power = repeated_input_int_value("Bitte geben sie die Leistung in PS ein: ")
     drive_type = repeated_input("Bitte geben sie die Antriebsart ein",
-                                ["Elektro", "Diesel", "Benzin"],
+                                POSSIBLE_DRIVE_TYPES,
                                 "Ungültige eingabe bitte verwenden sie nur die Werte")
     manufacture_date = repeated_input_int_value("Bitte geben sie das Herstellungsjahr ein: ")
     costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:")
@@ -59,7 +63,7 @@ def get_row_data_menu():
 def get_updated_data_menu():
     id = conversions.get_int("Bitte geben sie die ID der zu ändernden Zeile ein: ")
     selected_column = repeated_input("Welche Spalte soll geändert werden?",
-                                     ["Marke", "Model", "Farbe", "Leistung", "Antriebsart", "Herstellungsjahr", "Mietpreis"],
+                                     POSSIBLE_COLUMNS,
                                      "Ungültige eingabe bitte verwenden sie nur die Werte")
     if selected_column == "marke":
         mark = input("Bitte geben sie die Bezeichnung der neuen Marke ein:")
@@ -74,7 +78,7 @@ def get_updated_data_menu():
         power = repeated_input_int_value("Bitte geben sie die neue Leistung in PS ein: ")
         return (sql_queries.update_car_power, (power, id))
     elif selected_column == "antriebsart":
-        drive_type = repeated_input("Bitte geben sie die Antriebsart ein", ["Elektro", "Diesel", "Benzin"], "Ungültige eingabe bitte verwenden sie nur die Werte")
+        drive_type = repeated_input("Bitte geben sie die Antriebsart ein", POSSIBLE_DRIVE_TYPES, "Ungültige eingabe bitte verwenden sie nur die Werte")
         return (sql_queries.update_car_drive_type, (drive_type, id))
     elif selected_column == "herstellungsjahr":
         manufacturer_date = repeated_input_int_value("Bitte geben sie dass Herstellungsjahr ein: ")
@@ -82,8 +86,6 @@ def get_updated_data_menu():
     elif selected_column == "mietpreis":
         costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:") 
         return (sql_queries.update_car_price, (costs_per_day, id))
-    else:
-        print("Unbekannte Option, kehre ins Hauptmenü zurück")
 
 def add_row_menu():
     row_data = get_row_data_menu()
@@ -94,34 +96,33 @@ def change_row_menu():
     return update_data
 
 def delete_row_menu():
-    id = conversions.get_int("Bitte geben sie die ID der zu löschenden Zeile ein: ")
+    id = conversions.repeated_input_int_value("Bitte geben sie die ID der zu löschenden Zeile ein: ")
     return (sql_queries.delete_car, (id,))
 
 
 def search_rows_menu():
     input(f"Nach was soll gesucht werden? Mögliche werte ({HEADERS}): ")
-    search_order = input(f"Soll Aufsteigend oder Absteigend gesucht werden?: ")
+    search_order = repeated_input(f"Soll Aufsteigend oder Absteigend gesucht werden?", POSSIBLE_SORT_ORDER, "Ungültige eingabe bitte verwenden sie nur die Werte")
 
 def filter_rows_menu():
-    to_search = input(f"Was soll gefiltert werden (Marke/Antrieb/Preis): ").lower()
+    to_search = repeated_input(f"Was soll gefiltert werden", POSSIBLE_FILTERS, "Ungültige eingabe bitte verwenden sie nur die Werte")
 
     if to_search == "marke":
-        return (sql_queries.query_search_mark, ())
+        target_mark = input("Bitte gib den Namen der zu suchenden Marke ein: ")
+        return (sql_queries.query_search_mark, (target_mark,))
     elif to_search == "antrieb":
-        target_drive_type = input("Bitte geben sie den gewünschten Antriebstypen an (Elektro/Diesel/Benziner):")
+        target_drive_type = repeated_input("Bitte geben sie den gewünschten Antriebstypen an", POSSIBLE_DRIVE_TYPES, "Ungültige eingabe bitte verwenden sie nur die Werte")
         return (sql_queries.query_search_drivetype, (target_drive_type,))
     elif to_search == "preis":
-        search_order = input("Bitte gib an ob der Preis aufsteigend oder absteigend sortiert werden soll (Aufsteigend/Absteigend): ").lower()
-        #TODO: Error Handling
+        search_order = repeated_input("Bitte gib an ob der Preis aufsteigend oder absteigend sortiert werden soll", POSSIBLE_SORT_ORDER,
+                                      "Ungültige eingabe bitte verwenden sie nur die Werte")
         if search_order == "aufsteigend":
             return (sql_queries.query_search_price_asc, ())
         elif search_order == "absteigend":
             return (sql_queries.query_search_price_desc, ())
-    else:
-        print(f"Nach dem wert {to_search} kann nicht gefiltert werden.\nKehre ins Hauptmenü zurück.")
 
 def calculate_rent_menu():
-    id = conversions.get_int("ID des gewünschten Fahrzeugs eingeben: ")
+    id = repeated_input_int_value("ID des gewünschten Fahrzeugs eingeben: ")
     return (sql_queries.query_price, (id,))
     pass
 
@@ -130,12 +131,12 @@ def main_menu():
     print("================================")
     print("Hauptmenü")
     print("================================")
-    print("a.) Zeile Hinzufügen")
-    print("b.) Zeile ändern")
-    print("c.) Zeile Entfernen")
-    print("d.) Mietwagen anzeigen")
-    print("e.) Mietwagen filtern")
-    print("f.) Mietpreis berechnen")
+    print("a.) Datensatz Hinzufügen")
+    print("b.) Datensatz ändern")
+    print("c.) Datensatz Entfernen")
+    print("d.) Alle Mietwagen anzeigen")
+    print("e.) Alle Mietwagen filtern")
+    print("f.) Mietpreis für Mietwagen berechnen")
     print("q.) Programm Beenden")
     selection = input("Ihre Auswahl: ")
 
@@ -143,21 +144,21 @@ def main_menu():
         data = add_row_menu()
         context = database.establish_connection()
         database.insert_row(context, sql_queries.insert_car, data)
-    if selection == "b":
+    elif selection == "b":
         data = change_row_menu()
         context = database.establish_connection()
         database.update_row(context, data[0], data[1])
-    if selection == "c":
+    elif selection == "c":
         data = delete_row_menu()
         context = database.establish_connection()
         database.delete_row(context, data[0], data[1])
-    if selection == "d":
+    elif selection == "d":
         context = database.establish_connection()
         raw_data = database.query_all_data(context, sql_queries.query_all)
         table_data = conversions.row_to_column_data(raw_data)
         table_view = table_menu.create_table(table_data, HEADERS)
         print(table_view)
-    if selection == "e":
+    elif selection == "e":
         user_data = filter_rows_menu()
         filter_query = user_data[0] 
         filter_data = user_data[1]
@@ -165,22 +166,22 @@ def main_menu():
         context = database.establish_connection()
         raw_data = database.filter_row(context, filter_query, filter_data)
         table_data = conversions.row_to_column_data(raw_data)
-
         table_view = table_menu.create_table(table_data, HEADERS)
         print(table_view)        
-    if selection == "f":
+    elif selection == "f":
         user_data = calculate_rent_menu()
         context = database.establish_connection()
         filter_query = user_data[0]
         filter_data = user_data[1]
         data = database.filter_row(context, filter_query, filter_data)
-        rent_time = conversions.get_int("Bitte geben sie die Mietdauer in Tagen ein: ")
+        rent_time = repeated_input_int_value("Bitte geben sie die Mietdauer in Tagen ein: ")
         (preis,) = data
         rent_costs = float(preis[0]) * float(rent_time)
         print(f"Der Gesamtpreis beträgt: {rent_costs}€")
-    if selection == "q":
+    elif selection == "q":
         return True
     else:
         print("Unbekannte Option bitte versuche es erneut.")
 
+    input("Bitte eine beliebige Taste drücken um fortzufahren!")
     return False
