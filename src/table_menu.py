@@ -5,7 +5,8 @@ import utilities
 def format_column(column_data, column_length):
     if len(str(column_data)) < column_length:
         rest = (column_length - len(str(column_data)))
-        return f"{str(column_data) + (" " * rest)}"
+        content = str(column_data) + (" " * rest)
+        return f"{content}"
     else:
         return column_data
 

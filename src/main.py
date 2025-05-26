@@ -1,8 +1,8 @@
-import curses
-from curses import wrapper
+#import curses
+#from curses import wrapper
 import main_menu
 import table_menu
-import tui_window
+#import tui_window
 
 MAIN_MENU_ENTRIES = [
     "a) Eintrag hinzufügen [Hotkey => i]",
