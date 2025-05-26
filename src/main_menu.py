@@ -17,6 +17,7 @@ def repeated_input_int_value(prompt):
         (value, state) = conversions.get_int(f"{prompt}:")
 
         if state:
+            print(value)
             return value
         else:
             print(f"Der Wert ist ungültig bitte nur Werte eingeben")
@@ -61,31 +62,33 @@ def get_row_data_menu():
 
 #TODO: Funktionalität ungetestet, sollte laufen aber wenn sich einer die Zeit nimmt und alle optionen einmal durch probiert wäre es besser.
 def get_updated_data_menu():
-    id = conversions.get_int("Bitte geben sie die ID der zu ändernden Zeile ein: ")
+    row_id = repeated_input_int_value("Bitte geben sie die ID der zu ändernden Zeile ein: ")
+
     selected_column = repeated_input("Welche Spalte soll geändert werden?",
                                      POSSIBLE_COLUMNS,
                                      "Ungültige eingabe bitte verwenden sie nur die Werte")
     if selected_column == "marke":
         mark = input("Bitte geben sie die Bezeichnung der neuen Marke ein:")
-        return (sql_queries.update_car_mark, (mark, id))
+        return (sql_queries.update_car_mark, (mark, row_id))
     elif selected_column == "modell":
         model = input("Bitte geben sie die Bezeichnung des Modells ein: ")
-        return (sql_queries.update_car_model, (model, id))
+        return (sql_queries.update_car_model, (model, row_id))
     elif selected_column == "farbe":
         color = input("Bitte geben sie die neue Farbe des Fahrzeugs ein: ")
-        return (sql_queries.update_car_color, (color, id))
+        return (sql_queries.update_car_color, (color, row_id))
     elif selected_column == "leistung":
         power = repeated_input_int_value("Bitte geben sie die neue Leistung in PS ein: ")
-        return (sql_queries.update_car_power, (power, id))
+        print(power)
+        return (sql_queries.update_car_power, (power, row_id))
     elif selected_column == "antriebsart":
         drive_type = repeated_input("Bitte geben sie die Antriebsart ein", POSSIBLE_DRIVE_TYPES, "Ungültige eingabe bitte verwenden sie nur die Werte")
-        return (sql_queries.update_car_drive_type, (drive_type, id))
+        return (sql_queries.update_car_drive_type, (drive_type, row_id))
     elif selected_column == "herstellungsjahr":
         manufacturer_date = repeated_input_int_value("Bitte geben sie dass Herstellungsjahr ein: ")
-        return (sql_queries.update_car_manufacture_date, (date(manufacturer_date, 1, 1), id))
+        return (sql_queries.update_car_manufacture_date, (datetime.date(manufacturer_date, 1, 1), row_id))
     elif selected_column == "mietpreis":
         costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:") 
-        return (sql_queries.update_car_price, (costs_per_day, id))
+        return (sql_queries.update_car_price, (costs_per_day, row_id))
 
 def add_row_menu():
     row_data = get_row_data_menu()
@@ -93,6 +96,7 @@ def add_row_menu():
 
 def change_row_menu():
     update_data = get_updated_data_menu()
+    print(update_data)
     return update_data
 
 def delete_row_menu():
@@ -147,6 +151,7 @@ def main_menu():
     elif selection == "b":
         data = change_row_menu()
         context = database.establish_connection()
+        print(data[1])
         database.update_row(context, data[0], data[1])
     elif selection == "c":
         data = delete_row_menu()
