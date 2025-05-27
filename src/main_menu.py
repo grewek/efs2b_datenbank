@@ -1,7 +1,7 @@
 import mysql.connector
 import table_menu
 import conversions
-import database
+from database import Database
 import sql_queries
 import datetime
 
@@ -17,7 +17,6 @@ def repeated_input_int_value(prompt):
         (value, state) = conversions.get_int(f"{prompt}:")
 
         if state:
-            print(value)
             return value
         else:
             print(f"Der Wert ist ungültig bitte nur Werte eingeben")
@@ -62,33 +61,31 @@ def get_row_data_menu():
 
 #TODO: Funktionalität ungetestet, sollte laufen aber wenn sich einer die Zeit nimmt und alle optionen einmal durch probiert wäre es besser.
 def get_updated_data_menu():
-    row_id = repeated_input_int_value("Bitte geben sie die ID der zu ändernden Zeile ein: ")
-
+    id = conversions.get_int("Bitte geben sie die ID der zu ändernden Zeile ein: ")
     selected_column = repeated_input("Welche Spalte soll geändert werden?",
                                      POSSIBLE_COLUMNS,
                                      "Ungültige eingabe bitte verwenden sie nur die Werte")
     if selected_column == "marke":
         mark = input("Bitte geben sie die Bezeichnung der neuen Marke ein:")
-        return (sql_queries.update_car_mark, (mark, row_id))
+        return (sql_queries.update_car_mark, (mark, id))
     elif selected_column == "modell":
         model = input("Bitte geben sie die Bezeichnung des Modells ein: ")
-        return (sql_queries.update_car_model, (model, row_id))
+        return (sql_queries.update_car_model, (model, id))
     elif selected_column == "farbe":
         color = input("Bitte geben sie die neue Farbe des Fahrzeugs ein: ")
-        return (sql_queries.update_car_color, (color, row_id))
+        return (sql_queries.update_car_color, (color, id))
     elif selected_column == "leistung":
         power = repeated_input_int_value("Bitte geben sie die neue Leistung in PS ein: ")
-        print(power)
-        return (sql_queries.update_car_power, (power, row_id))
+        return (sql_queries.update_car_power, (power, id))
     elif selected_column == "antriebsart":
         drive_type = repeated_input("Bitte geben sie die Antriebsart ein", POSSIBLE_DRIVE_TYPES, "Ungültige eingabe bitte verwenden sie nur die Werte")
-        return (sql_queries.update_car_drive_type, (drive_type, row_id))
+        return (sql_queries.update_car_drive_type, (drive_type, id))
     elif selected_column == "herstellungsjahr":
         manufacturer_date = repeated_input_int_value("Bitte geben sie dass Herstellungsjahr ein: ")
-        return (sql_queries.update_car_manufacture_date, (datetime.date(manufacturer_date, 1, 1), row_id))
+        return (sql_queries.update_car_manufacture_date, (date(manufacturer_date, 1, 1), id))
     elif selected_column == "mietpreis":
         costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:") 
-        return (sql_queries.update_car_price, (costs_per_day, row_id))
+        return (sql_queries.update_car_price, (costs_per_day, id))
 
 def add_row_menu():
     row_data = get_row_data_menu()
@@ -96,7 +93,6 @@ def add_row_menu():
 
 def change_row_menu():
     update_data = get_updated_data_menu()
-    print(update_data)
     return update_data
 
 def delete_row_menu():
@@ -130,30 +126,30 @@ def calculate_rent_menu():
     return (sql_queries.query_price, (id,))
     pass
 
-def settings_menu():
-    print(f"a.)Ip Addresse = {database.get_address()}")
-    print(f"b.)Nutzername = {database.get_username()}")
-    print(f"c.)Passwort = {database.get_password()}")
-    print(f"d.)Datenbankname = {database.get_name()}")
+def settings_menu(db):
+    print(f"a.)Ip Addresse = {db.get_address()}")
+    print(f"b.)Nutzername = {db.get_username()}")
+    print(f"c.)Passwort = {db.get_password()}")
+    print(f"d.)Datenbankname = {db.get_name()}")
     print(f"e.)Zurück ins Hauptmenü")
     selection = repeated_input("Ihre Auswahl: ", ["a", "b", "c", "d", "e"],"Ungültige eingabe bitte verwenden sie nur die Werte")
 
     if selection == "a":
         new_address = input("Bitte geben sie die neue Addresse ein: ")
-        database.set_address(new_address)
+        db.address = new_address
     elif selection == "b":
         new_username = input("Bitte geben sie den neuen Nutzernamen ein: ")
-        database.set_username(new_username)
+        db.username = new_username
     elif selection == "c":
         new_password = input("Bitte geben sie das neue Passwort ein: ")
-        database.set_password(new_password)
+        db.password = new_password
     elif selection == "d":
-        new_database_name = input("Bitte geben sie den neuen Datenbanknamen ein: ")
-        database.set_name(new_database_name)
+        new_db_name = input("Bitte geben sie den neuen Datenbanknamen ein: ")
+        db.db_name = new_db_name
     elif selection == "e":
         return
     
-def main_menu():
+def main_menu(db):
     print("Wilkommen zur Datenbankverwaltung")
     print("================================")
     print("Hauptmenü")
@@ -170,45 +166,53 @@ def main_menu():
 
     if selection == "a":
         data = add_row_menu()
-        context = database.establish_connection()
-        database.insert_row(context, sql_queries.insert_car, data)
+        db.establish_connection()
+        db.insert_row(sql_queries.insert_car, data)
     elif selection == "b":
         data = change_row_menu()
-        context = database.establish_connection()
-        print(data[1])
-        database.update_row(context, data[0], data[1])
+        db.establish_connection()
+        db.update_row(data[0], data[1])
     elif selection == "c":
         data = delete_row_menu()
-        context = database.establish_connection()
-        database.delete_row(context, data[0], data[1])
+        db.establish_connection()
+        db.delete_row(data[0], data[1])
     elif selection == "d":
-        context = database.establish_connection()
-        raw_data = database.query_all_data(context, sql_queries.query_all)
-        table_data = conversions.row_to_column_data(raw_data)
-        table_view = table_menu.create_table(table_data, HEADERS)
-        print(table_view)
+        db.establish_connection()
+        raw_data = db.query_all_data(sql_queries.query_all)
+        if raw_data != None:
+            table_data = conversions.row_to_column_data(raw_data)
+            table_view = table_menu.create_table(table_data, HEADERS)
+            print(table_view)
+        else:
+            print("Operation fehlgeschlagen")
     elif selection == "e":
         user_data = filter_rows_menu()
         filter_query = user_data[0] 
         filter_data = user_data[1]
 
-        context = database.establish_connection()
-        raw_data = database.filter_row(context, filter_query, filter_data)
-        table_data = conversions.row_to_column_data(raw_data)
-        table_view = table_menu.create_table(table_data, HEADERS)
-        print(table_view)        
+        db.establish_connection()
+        raw_data = db.filter_row(filter_query, filter_data)
+        if raw_data != None:
+            table_data = conversions.row_to_column_data(raw_data)
+            table_view = table_menu.create_table(table_data, HEADERS)
+            print(table_view)        
+        else:
+            print("Operation fehlgeschlagen")
     elif selection == "f":
         user_data = calculate_rent_menu()
-        context = database.establish_connection()
+        db.establish_connection()
         filter_query = user_data[0]
         filter_data = user_data[1]
-        data = database.filter_row(context, filter_query, filter_data)
-        rent_time = repeated_input_int_value("Bitte geben sie die Mietdauer in Tagen ein: ")
-        (preis,) = data
-        rent_costs = float(preis[0]) * float(rent_time)
-        print(f"Der Gesamtpreis beträgt: {rent_costs}€")
+        data = db.filter_row(filter_query, filter_data)
+        if data != None:
+            rent_time = repeated_input_int_value("Bitte geben sie die Mietdauer in Tagen ein: ")
+            (preis,) = data
+            rent_costs = float(preis[0]) * float(rent_time)
+            print(f"Der Gesamtpreis beträgt: {rent_costs}€")
+        else:
+            print("Operation fehlgeschlagen")
     elif selection == "g":
-        settings_menu()
+        settings_menu(db)
     elif selection == "q":
         return True
     else:
