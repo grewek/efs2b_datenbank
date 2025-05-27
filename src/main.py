@@ -1,8 +1,6 @@
-#import curses
-#from curses import wrapper
 import main_menu
 import table_menu
-#import tui_window
+from database import Database
 
 MAIN_MENU_ENTRIES = [
     "a) Eintrag hinzufügen [Hotkey => i]",
@@ -13,8 +11,9 @@ MAIN_MENU_ENTRIES = [
 
 def main_basic():
     should_quit = False
+    db = Database()
     while not should_quit:
-        should_quit = main_menu.main_menu()
+        should_quit = main_menu.main_menu(db)
 
     print("ALL YOUR DATA ARE BELONG TO US")
 
