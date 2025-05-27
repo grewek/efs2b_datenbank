@@ -13,7 +13,7 @@ update_car_color = ("UPDATE Mietwagen SET Farbe = %s WHERE Mietwagennr = %s")
 update_car_drive_type = ("UPDATE Mietwagen SET Antriebsart = %s WHERE Mietwagennr = %s")
 update_car_manufacture_date = ("UPDATE Mietwagen SET Baujahr = %s WHERE Mietwagennr = %s")
 update_car_price = ("UPDATE Mietwagen SET `Mietpreis pro tag` = %s WHERE Mietwagennr = %s")
-update_car_power = ("UPDATE Mietwagen SET Leistung = %s WHERE Mietwagennr = %s ")
+update_car_power = ("UPDATE Mietwagen SET Motorleibstung = %s WHERE Mietwagennr = %s ")
 
 query_search_mark = "SELECT * FROM Mietwagen WHERE Marke = %s"
 query_search_model = "SELECT * FROM Mietwagen WHERE Modell = %s"
