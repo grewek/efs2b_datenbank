@@ -126,6 +126,29 @@ def calculate_rent_menu():
     return (sql_queries.query_price, (id,))
     pass
 
+def settings_menu():
+    print(f"a.)Ip Addresse = {database.get_address()}")
+    print(f"b.)Nutzername = {database.get_username()}")
+    print(f"c.)Passwort = {database.get_password()}")
+    print(f"d.)Datenbankname = {database.get_name()}")
+    print(f"e.)Zurück ins Hauptmenü")
+    selection = repeated_input("Ihre Auswahl: ", ["a", "b", "c", "d", "e"],"Ungültige eingabe bitte verwenden sie nur die Werte")
+
+    if selection == "a":
+        new_address = input("Bitte geben sie die neue Addresse ein: ")
+        database.set_address(new_address)
+    elif selection == "b":
+        new_username = input("Bitte geben sie den neuen Nutzernamen ein: ")
+        database.set_username(new_username)
+    elif selection == "c":
+        new_password = input("Bitte geben sie das neue Passwort ein: ")
+        database.set_password(new_password)
+    elif selection == "d":
+        new_database_name = input("Bitte geben sie den neuen Datenbanknamen ein: ")
+        database.set_name(new_database_name)
+    elif selection == "e":
+        return
+    
 def main_menu():
     print("Wilkommen zur Datenbankverwaltung")
     print("================================")
@@ -137,6 +160,7 @@ def main_menu():
     print("d.) Alle Mietwagen anzeigen")
     print("e.) Alle Mietwagen filtern")
     print("f.) Mietpreis für Mietwagen berechnen")
+    print("g.) Datenbank Einstellungen")
     print("q.) Programm Beenden")
     selection = input("Ihre Auswahl: ")
 
@@ -178,6 +202,8 @@ def main_menu():
         (preis,) = data
         rent_costs = float(preis[0]) * float(rent_time)
         print(f"Der Gesamtpreis beträgt: {rent_costs}€")
+    elif selection == "g":
+        settings_menu()
     elif selection == "q":
         return True
     else:
