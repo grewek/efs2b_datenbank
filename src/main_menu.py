@@ -127,10 +127,10 @@ def calculate_rent_menu():
     pass
 
 def settings_menu(db):
-    print(f"a.)Ip Addresse = {db.get_address()}")
-    print(f"b.)Nutzername = {db.get_username()}")
-    print(f"c.)Passwort = {db.get_password()}")
-    print(f"d.)Datenbankname = {db.get_name()}")
+    print(f"a.)Ip Addresse = {db.address}")
+    print(f"b.)Nutzername = {db.username}")
+    print(f"c.)Passwort = {db.password}")
+    print(f"d.)Datenbankname = {db.db_name}")
     print(f"e.)Zurück ins Hauptmenü")
     selection = repeated_input("Ihre Auswahl: ", ["a", "b", "c", "d", "e"],"Ungültige eingabe bitte verwenden sie nur die Werte")
 
