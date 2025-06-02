@@ -86,7 +86,7 @@ class Database:
 
         if data:
             cursor.execute(update_string, data)
-            context.commit()
+            self.context.commit()
 
     def delete_row(self, delete_string, data):
         if self.context == None:
@@ -97,4 +97,4 @@ class Database:
 
         if data:
             cursor.execute(delete_string, data)
-            context.commit()
+            self.context.commit()
