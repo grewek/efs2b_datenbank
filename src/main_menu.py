@@ -50,15 +50,24 @@ def get_row_data_menu():
     mark = input("Bitte geben sie die Marke des Wagens ein: ")
     model = input("Bitte geben sie den Namen des Modells ein: ")
     color = input("Bitte geben sie die Farbe des Modells ein: ")
-    power = repeated_input_int_value("Bitte geben sie die Leistung in PS ein: ")
+    power = repeated_input_int_value("Bitte geben sie die Leistung in PS ein")
     drive_type = repeated_input("Bitte geben sie die Antriebsart ein",
                                 POSSIBLE_DRIVE_TYPES,
                                 "Ungültige eingabe bitte verwenden sie nur die Werte")
-    manufacture_date = repeated_input_int_value("Bitte geben sie das Herstellungsjahr ein: ")
-    costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:")
+    manufacture_date = repeated_date_input("Bitte geben sie das Herstellungsjahr ein ")
+    costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein")
 
     return (mark, model, color, power, drive_type, datetime.date(manufacture_date, 1, 1), costs_per_day)
 #TODO: Datums parsing kann fehlschlagen
+def repeated_date_input(message):
+    while True:
+        (year, state) = conversions.get_int(f"{message}:")
+
+        if state and (year > datetime.MINYEAR and year < datetime.MAXYEAR):
+            return year
+        else:
+            print("Das Jahr ist ungültig bitte nochmal versuchen")
+
 #TODO: Funktionalität ungetestet, sollte laufen aber wenn sich einer die Zeit nimmt und alle optionen einmal durch probiert wäre es besser.
 def get_updated_data_menu():
     (id, value) = conversions.get_int("Bitte geben sie die ID der zu ändernden Zeile ein: ")
@@ -81,9 +90,8 @@ def get_updated_data_menu():
         drive_type = repeated_input("Bitte geben sie die Antriebsart ein", POSSIBLE_DRIVE_TYPES, "Ungültige eingabe bitte verwenden sie nur die Werte")
         return (sql_queries.update_car_drive_type, (drive_type, id))
     elif selected_column == "herstellungsjahr":
-        manufacturer_date = repeated_input_int_value("Bitte geben sie dass Herstellungsjahr ein: ")
-
-        return (sql_queries.update_car_manufacture_date, (date(manufacturer_date, 1, 1), id))
+        manufacturer_date = repeated_date_input("Bitte geben sie dass Herstellungsjahr ein ")
+        return (sql_queries.update_car_manufacture_date, (datetime.date(manufacturer_date, 1, 1), id))
     elif selected_column == "mietpreis":
         costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:") 
         return (sql_queries.update_car_price, (costs_per_day, id))
