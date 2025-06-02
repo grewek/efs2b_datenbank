@@ -24,7 +24,7 @@ class Database:
                 print("Verbindung mit der Datenbank fehlgeschlagen, nutzername oder password falsch.")
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 self.last_error = f"Die Datenbank '{self.db_name}' existiert nicht."
-                print("Die Datenbank 'fuhrpark' existiert nicht.")
+                print(f"Die Datenbank '{db_name}' existiert nicht.")
             else:
                 self.last_error = f"{err}"
                 print(err)
@@ -43,7 +43,7 @@ class Database:
         if data:
             cursor.execute(query_string, data)
             mietwagennr = cursor.lastrowid
-            context.commit()
+            self.context.commit()
 
     def query_all_data(self, query_string):
         if self.context == None:
