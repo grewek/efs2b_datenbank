@@ -58,10 +58,10 @@ def get_row_data_menu():
     costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:")
 
     return (mark, model, color, power, drive_type, datetime.date(manufacture_date, 1, 1), costs_per_day)
-
+#TODO: Datums parsing kann fehlschlagen
 #TODO: Funktionalität ungetestet, sollte laufen aber wenn sich einer die Zeit nimmt und alle optionen einmal durch probiert wäre es besser.
 def get_updated_data_menu():
-    id = conversions.get_int("Bitte geben sie die ID der zu ändernden Zeile ein: ")
+    (id, value) = conversions.get_int("Bitte geben sie die ID der zu ändernden Zeile ein: ")
     selected_column = repeated_input("Welche Spalte soll geändert werden?",
                                      POSSIBLE_COLUMNS,
                                      "Ungültige eingabe bitte verwenden sie nur die Werte")
@@ -82,6 +82,7 @@ def get_updated_data_menu():
         return (sql_queries.update_car_drive_type, (drive_type, id))
     elif selected_column == "herstellungsjahr":
         manufacturer_date = repeated_input_int_value("Bitte geben sie dass Herstellungsjahr ein: ")
+
         return (sql_queries.update_car_manufacture_date, (date(manufacturer_date, 1, 1), id))
     elif selected_column == "mietpreis":
         costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:") 
@@ -96,7 +97,7 @@ def change_row_menu():
     return update_data
 
 def delete_row_menu():
-    id = conversions.repeated_input_int_value("Bitte geben sie die ID der zu löschenden Zeile ein: ")
+    id = repeated_input_int_value("Bitte geben sie die ID der zu löschenden Zeile ein: ")
     return (sql_queries.delete_car, (id,))
 
 
