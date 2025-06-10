@@ -5,23 +5,34 @@ from database import Database
 import sql_queries
 import datetime
 
+#Die Namen unserer einzelnen Spalten gespeichert als Konstante damit ich sie nicht wieder und wieder tippen muss
 HEADERS = ["id", "marke", "modell", "farbe", "motorleistung", "antriebsart", "baujahr", "mietpreis"]
 
+#Konstante Liste mit Namen für mögliche Antriebstypen
 POSSIBLE_DRIVE_TYPES = ["Elektro", "Diesel", "Benzin"]
+#Konstante Liste mit Namen für mögliche Spalten
 POSSIBLE_COLUMNS = ["Marke", "Model", "Farbe", "Leistung", "Antriebsart", "Herstellungsjahr", "Mietpreis"]  
+#Konstante Liste mit Name für mögliche Sortierungen
 POSSIBLE_SORT_ORDER = ["Aufsteigend", "Absteigend"] 
+#Konstante Liste mit den möglichen Optionen für Filter
 POSSIBLE_FILTERS = ["Marke", "Antrieb", "Preis"]
 
+#Holt einen Ganzzahligenwert vom Nutzer, wird solange wiederholt bis die Eingabe korrekt ist
 def repeated_input_int_value(prompt):
+    #Wir wiederholen die Prozedur solange bis der Nutzer eine korrekte Eingabe macht
     while True:
+        #Wir rufen die get_int funktion auf und speichern die zurückgegebenen Werte in value und state
         (value, state) = conversions.get_int(f"{prompt}:")
 
+        #Wenn state true ist können wir den Wert value an den Aufrufer zurückgeben
         if state:
             return value
         else:
+            #Ansonsten geben wir eine Fehlermeldung aus und wiederholen die Eingabe
             print(f"Der Wert ist ungültig bitte nur Werte eingeben")
-
+#Holt einen Fließkommawert vom Nutzer, wird solange wiederholt bis die Eingabe korrekt ist
 def repeated_input_float_value(prompt):
+    #Siehe repeated_input_int_value
     while True:
         (value, state) = conversions.get_float(f"{prompt}:")
 
@@ -31,20 +42,30 @@ def repeated_input_float_value(prompt):
             print(f"Der Wert ist ungültig bitte nur Werte eingeben")
 
 
+#Prüft ob die Eingabe des Nutzer einem der Werte innerhalb der Liste des zweiten Arguments entspricht
 def check_validity(user_input, valid_strings):
+    #Laufe durch alle optionen die in valid_strings angegeben sind
     for possible_option in valid_strings:
+        #Wenn die Nutzereingabe dem Wert possible_options entspricht geben wir true zurück
         if user_input.lower() == possible_option.lower():
             return True
 
+    #Ansonsten geben wir false zurück, wir kennen den eingegebenen Wert nicht
     return False
 
+#Prüft ob ein Wert einem von mehreren möglichen Werten entspricht, wird wiederholt solange dies nicht der Fall ist 
 def repeated_input(prompt, possible_values, failure_msg):
     while True:
+        #Zeige dem Nutzer die aufforderung zur Eingabe und die mögliche Eingabewerte an
         user_input = input(f"{prompt} {possible_values}: ").lower()
+        #Prüfe ob die Eingabe einem der Werte entspricht
         if check_validity(user_input, possible_values):
+            #Die eingabe entspricht einem Wert, also geben wir den eingetippten Wert des Nutzers zurück
             return user_input
         else:
+            #Fehlschlag wir konnten den Wert nicht verifizieren, wir versuchen es nochmal
             print(f"{failure_msg} {possible_values}")
+
 
 def get_row_data_menu():
     mark = input("Bitte geben sie die Marke des Wagens ein: ")
