@@ -32,7 +32,7 @@ class Database:
                 print("Verbindung mit der Datenbank fehlgeschlagen, nutzername oder password falsch.")
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 self.last_error = f"Die Datenbank '{self.db_name}' existiert nicht."
-                print("Die Datenbank 'fuhrpark' existiert nicht.")
+                print(f"Die Datenbank '{db_name}' existiert nicht.")
             else:
                 self.last_error = f"{err}"
                 print(err)
@@ -63,8 +63,7 @@ class Database:
             cursor.execute(query_string, data)
             #Wir speichern die Id der nächsten Zeile in einer Variable
             mietwagennr = cursor.lastrowid
-            #Mit commit() sorgen wir dafür dass die vorherige execute Operation auch wirklich in die Datenbank geschrieben wird.
-            context.commit()
+            self.context.commit()
 
     #Rufe alle Daten aus der Datenbank ab
     def query_all_data(self, query_string):
@@ -121,7 +120,7 @@ class Database:
 
         if data:
             cursor.execute(update_string, data)
-            context.commit()
+            self.context.commit()
 
     #Mit dieser Methode lassen sich Zeilen aus der Datenbank löschen
     def delete_row(self, delete_string, data):
@@ -133,4 +132,4 @@ class Database:
 
         if data:
             cursor.execute(delete_string, data)
-            context.commit()
+            self.context.commit()
