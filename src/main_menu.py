@@ -67,27 +67,43 @@ def repeated_input(prompt, possible_values, failure_msg):
             print(f"{failure_msg} {possible_values}")
 
 
+#Fragt den Nutzer nach den nötigen Daten um eine neue Zeile in die Datenbank einzufügen.
 def get_row_data_menu():
     mark = input("Bitte geben sie die Marke des Wagens ein: ")
     model = input("Bitte geben sie den Namen des Modells ein: ")
     color = input("Bitte geben sie die Farbe des Modells ein: ")
     power = repeated_input_int_value("Bitte geben sie die Leistung in PS ein: ")
+    #Fragt den Nutzer nach der Antriebsart hier verwenden wir das erste mal repeated input um die Eingabe möglichkeiten
+    #des Nutzers zu begrenzen
     drive_type = repeated_input("Bitte geben sie die Antriebsart ein",
                                 POSSIBLE_DRIVE_TYPES,
                                 "Ungültige eingabe bitte verwenden sie nur die Werte")
     manufacture_date = repeated_input_int_value("Bitte geben sie das Herstellungsjahr ein: ")
     costs_per_day = repeated_input_float_value("Bitte geben sie die täglichen Kosten ein:")
 
+    #Wir geben die Daten als Tuple zurück da der Mysql Connector mit diesen Daten arbeitet
+    #außerdem wandeln wir das Jahr mit datetime.date(manufacture_date) in ein gültiges Datum um
     return (mark, model, color, power, drive_type, datetime.date(manufacture_date, 1, 1), costs_per_day)
 
-#TODO: Funktionalität ungetestet, sollte laufen aber wenn sich einer die Zeit nimmt und alle optionen einmal durch probiert wäre es besser.
+#Die Funktion wird verwendet um gezielt die Werte einer Zeile zu verändern
 def get_updated_data_menu():
+    #Zuerst lassen wir den Nutzer spezifizieren welche Zeile er ändern möchte, das passiert über die Eingabe
+    #der Mietwagennr
     id = conversions.get_int("Bitte geben sie die ID der zu ändernden Zeile ein: ")
+    #Jetzt muss der Nutzer wieder eine Spalte dieser Zeile auswählen die geändert werden soll
     selected_column = repeated_input("Welche Spalte soll geändert werden?",
                                      POSSIBLE_COLUMNS,
                                      "Ungültige eingabe bitte verwenden sie nur die Werte")
+    #Dieses if statement prüft welche Spalte wir updaten müssen
     if selected_column == "marke":
+        #Wenn wir die Spalte gefunden haben, muss der Nutzer den Namen der neuen Marke eingeben
         mark = input("Bitte geben sie die Bezeichnung der neuen Marke ein:")
+        #Danach geben wir den sql_query String zurück und die geänderten Werte
+        #Als Rückgabe verwenden wir eine verschachtelte Tuple 
+        #Die Zahlen markieren hier die Tuples in Tuple 1 finden wir nur den query und teil 2 beinhaltet nur die Daten
+        #die zum updaten der Zeile nötig sind.
+        #               1                       2    2
+        #               |                       |    |
         return (sql_queries.update_car_mark, (mark, id))
     elif selected_column == "modell":
         model = input("Bitte geben sie die Bezeichnung des Modells ein: ")
@@ -109,22 +125,23 @@ def get_updated_data_menu():
         return (sql_queries.update_car_price, (costs_per_day, id))
 
 def add_row_menu():
+    #Ruft get_row_data_menu auf und gibt die Werte zurück
     row_data = get_row_data_menu()
     return row_data
 
 def change_row_menu():
+    #Wie oben wir rufen einfach get_updated_data_menu auf und geben die erhaltenen Werte zurück
     update_data = get_updated_data_menu()
     return update_data
 
+#Löscht die Zeile mit der angegebenen ID aus der Datenbank.
 def delete_row_menu():
+    #Zuerst holen wir die ID der Zeile vom Nutzer
     id = conversions.repeated_input_int_value("Bitte geben sie die ID der zu löschenden Zeile ein: ")
+    #Dann geben wir die Werte zurück wie in jedem anderen Fall
     return (sql_queries.delete_car, (id,))
 
-
-def search_rows_menu():
-    input(f"Nach was soll gesucht werden? Mögliche werte ({HEADERS}): ")
-    search_order = repeated_input(f"Soll Aufsteigend oder Absteigend gesucht werden?", POSSIBLE_SORT_ORDER, "Ungültige eingabe bitte verwenden sie nur die Werte")
-
+# Ermöglicht die Suche in der Datenbank
 def filter_rows_menu():
     to_search = repeated_input(f"Was soll gefiltert werden", POSSIBLE_FILTERS, "Ungültige eingabe bitte verwenden sie nur die Werte")
 
@@ -142,11 +159,13 @@ def filter_rows_menu():
         elif search_order == "absteigend":
             return (sql_queries.query_search_price_desc, ())
 
+# Holt den Mietpreis eines Wagens aus der Datenbank
 def calculate_rent_menu():
     id = repeated_input_int_value("ID des gewünschten Fahrzeugs eingeben: ")
     return (sql_queries.query_price, (id,))
     pass
 
+#Das Einstellungsmenü, eingebaut um unterschiedliche Nutzernamen, Passwörter, Datenbanknamen und Remote Hosts zu ermöglichen
 def settings_menu(db):
     print(f"a.)Ip Addresse = {db.address}")
     print(f"b.)Nutzername = {db.username}")
@@ -157,6 +176,7 @@ def settings_menu(db):
 
     if selection == "a":
         new_address = input("Bitte geben sie die neue Addresse ein: ")
+        #Wir setzten die Eigenschaften der Datenbank auf die neue Werte
         db.address = new_address
     elif selection == "b":
         new_username = input("Bitte geben sie den neuen Nutzernamen ein: ")
@@ -170,6 +190,7 @@ def settings_menu(db):
     elif selection == "e":
         return
     
+#Das Hauptmenü ist verantwortlich für die anzeige des Menüs und verarbeitung von Nutzerinteraktionen
 def main_menu(db):
     print("Wilkommen zur Datenbankverwaltung")
     print("================================")
@@ -186,12 +207,16 @@ def main_menu(db):
     selection = input("Ihre Auswahl: ")
 
     if selection == "a":
+        #Wir wollen einen Datensatz hinzufügen, also rufen wir add_row_menu auf
         data = add_row_menu()
+        #Danach stellen wir sicher, dass wir mit der Datenbank verbunden sind oder bauen eine neue Datenbankverbindung auf
         db.establish_connection()
+        #Jetzt rufen wir insert_row aus unserer Datenbanklasse auf und übergeben den query sowie die daten
         db.insert_row(sql_queries.insert_car, data)
     elif selection == "b":
         data = change_row_menu()
         db.establish_connection()
+        #Hier holen wir die Daten aus der Tuple, data[0] entspricht dabei dem sql_query und data[1] dem Daten teil z.b. (id, mark)
         db.update_row(data[0], data[1])
     elif selection == "c":
         data = delete_row_menu()
@@ -200,11 +225,16 @@ def main_menu(db):
     elif selection == "d":
         db.establish_connection()
         raw_data = db.query_all_data(sql_queries.query_all)
+        #Wir stellen sicher, dass wir Daten von der Datenbank erhalten haben
         if raw_data != None:
+            #Danach konvertieren wir die erhaltenen Daten in Spaltenform
             table_data = conversions.row_to_column_data(raw_data)
+            #Mit diesen konvertierten Daten können wir create_table aufrufen
             table_view = table_menu.create_table(table_data, HEADERS)
+            #Die fertige Tabelle stellen wir jetzt auf dem Bildschirm dar
             print(table_view)
         else:
+            #Sollte keine Datenbank verbindung zustande kommen, geben wir hier eine Fehlermeldung aus
             print("Operation fehlgeschlagen")
     elif selection == "e":
         user_data = filter_rows_menu()
@@ -226,18 +256,27 @@ def main_menu(db):
         filter_data = user_data[1]
         data = db.filter_row(filter_query, filter_data)
         if data != None:
+            #Wenn wir die Daten erfolgreich abrufen konnten bitten wir den Nutzer die Mietdauer in Tagen einzugeben
             rent_time = repeated_input_int_value("Bitte geben sie die Mietdauer in Tagen ein: ")
+            #Hier erschaffen wir eine neue Variable mit dem Namen preis
             (preis,) = data
+            #Hier wird der Preis berechnet
             rent_costs = float(preis[0]) * float(rent_time)
+            #Nun erfolgt die Ausgabe auf dem Bildschirm
             print(f"Der Gesamtpreis beträgt: {rent_costs}€")
         else:
+            #Keine Verbindung zur Datenbank möglich
             print("Operation fehlgeschlagen")
     elif selection == "g":
+        #Wir gehen ins Einstellungsmenü
         settings_menu(db)
     elif selection == "q":
+        #Wenn der Nutzer das Program beenden will, geben wir hier True zurück damit sich die Hauptschleife beendet
         return True
     else:
+        #Der Nutzer hat eine unbekannte Option benutzt
         print("Unbekannte Option bitte versuche es erneut.")
 
     input("Bitte eine beliebige Taste drücken um fortzufahren!")
+    #Der Nutzer will das Programm nicht beenden wir geben also False zurück damit die Hauptschleife weiterläuft
     return False

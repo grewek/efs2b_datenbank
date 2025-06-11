@@ -7,6 +7,7 @@ insert_car = ("INSERT INTO Mietwagen "
 delete_car = "DELETE FROM Mietwagen Where Mietwagennr = %s"
 
 #Queries zum Updaten von Datenbankeinträgen.
+# Das %s innerhalb des Queries wird mit Werten ersetzt die wir erst zur Laufzeit kennen
 update_car_mark = ("UPDATE Mietwagen SET Marke = %s WHERE Mietwagennr = %s")
 update_car_model = ("UPDATE Mietwagen SET Modell = %s WHERE Mietwagennr = %s")
 update_car_color = ("UPDATE Mietwagen SET Farbe = %s WHERE Mietwagennr = %s")
