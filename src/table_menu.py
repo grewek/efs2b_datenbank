@@ -68,11 +68,16 @@ def create_table(tabular_data, headers):
     #Holt die Anzahl an Einträgen pro Spalte
     column_length = len(tabular_data[headers[0]])
 
+    #Ruft jeden Spalteneintrag ab
     for row_index in range(0, column_length):
-        if(row_index + 1 == len(headers)):
+        #Wenn wir am ende angekommen sidn müssen wir einen Weiteren Border generieren deswegen dieses if statement
+        if(row_index + 1 == column_length):
+            #Rufe create_row auf mit den nötigen daten und True um einen zusätzlichen Border zu generieren
             result += create_row(tabular_data, headers, row_index, True)
         else:
+            #Generiere Die Zeile für die aktuelle Spalte
             result += create_row(tabular_data, headers, row_index)
 
+    #Gebe das Ergebnis zurück damit wir es dem Nutzer präsentieren können
     return result
 
